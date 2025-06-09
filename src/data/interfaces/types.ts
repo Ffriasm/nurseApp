@@ -8,6 +8,7 @@ export type RequestStatus = 'pending' | 'accepted' | 'completed' | 'cancelled';
 export interface BaseUser {
   id: string; // Firestore ID
   type: UserType;
+  password: string; 
   name: string;
   email: string;
   phone: string;

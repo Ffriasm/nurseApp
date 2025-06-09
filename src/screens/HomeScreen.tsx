@@ -1,13 +1,10 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import Header from "../components/header/Header";
+import { RootStackParamList } from "../navigation/AppNavigator";
 import Carousel from "../components/carousel/carousel";
-
-type RootStackParamList = {
-  Home: undefined;
-  Login: undefined;
-};
+import AuthButtons from "../components/authButtons/AuthButtons";
+import Logo from "../components/logo/Logo";
 
 type Props = {
   navigation: StackNavigationProp<RootStackParamList, "Home">;
@@ -15,60 +12,58 @@ type Props = {
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <View>
-        <Header
-          showLoginButton
+    <ScrollView contentContainerStyle={styles.scroll}>
+      <View style={styles.container}>
+        <Logo size={200} />
+
+        <Text style={styles.title}>Enfermería a Domicilio</Text>
+        <Text style={styles.subtitle}>
+          Profesionales de salud confiables en la puerta de tu casa.
+        </Text>
+
+        <View style={styles.carouselContainer}>
+          <Carousel />
+        </View>
+
+        <AuthButtons
+          onRegisterPress={() => navigation.navigate("ChooseUserTypeScreen")}
           onLoginPress={() => navigation.navigate("Login")}
         />
       </View>
-      <View style={styles.bodyContainer}>
-        <View  style={styles.carouselContainer}>
-          <Carousel />
-        </View>
-        <Text style={styles.title}>Bienvenido a Enfermería a Domicilio</Text>
-        <Button
-          title="Ir a Login"
-          onPress={() => navigation.navigate("Login")}
-          color="#3182CE"
-        />
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+export default HomeScreen;
 
-    padding: 20,
+const styles = StyleSheet.create({
+  scroll: {
+    flexGrow: 1,
     backgroundColor: "#f0f9ff",
+    paddingVertical: 20,
+    paddingHorizontal: 24,
   },
-  headerContainer: {
-    width: "100%",
-    backgroundColor: "#f0f9ff",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e2e8f0",
-  },
-  bodyContainer:{
-    flex: 1,
-    
+  container: {
     alignItems: "center",
-    backgroundColor: "#f0f9ff",
-  },
-  carouselContainer:{
-    width: "100%",
-    height: 300,
-    marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 30,
-    color: "#3182CE",
+    color: "#2E86AB",
+    marginTop: 16,
+    marginBottom: 8,
     textAlign: "center",
   },
+  subtitle: {
+    fontSize: 16,
+    color: "#444",
+    textAlign: "center",
+    marginBottom: 24,
+    paddingHorizontal: 10,
+  },
+  carouselContainer: {
+    width: "100%",
+    height: 300,
+    marginBottom: 10,
+  },
 });
-
-export default HomeScreen;
