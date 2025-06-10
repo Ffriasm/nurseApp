@@ -14,10 +14,10 @@ export const UserRepositoryProvider = ({ children }: UserRepositoryProviderProps
   </UserRepositoryContext.Provider>
 );
 
-export const useUserRepository = (): IUserRepository => {
+export const useUserRepo = (): IUserRepository => {
   const context = useContext(UserRepositoryContext);
   if (!context) {
-    throw new Error("useUserRepository debe usarse dentro de un UserRepositoryProvider");
+    throw new Error("useUserRepo debe usarse dentro de un UserRepositoryProvider");
   }
   return context;
 };

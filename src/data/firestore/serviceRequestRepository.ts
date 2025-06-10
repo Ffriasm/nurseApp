@@ -1,5 +1,5 @@
 import { IServiceRequestRepository } from "../interfaces/IServiceRequestRepository";
-import { db } from "../../../firebaseConfig";
+import { fireStore } from "../../../firebaseConfig";
 import {
   doc,
   setDoc,
@@ -15,18 +15,18 @@ import { ServiceRequest } from "../interfaces/types";
 
 export const firestoreServiceRequestRepository: IServiceRequestRepository = {
     async createRequest(request) {
-        await setDoc(doc(db, "serviceRequests", request.id), request);
+        await setDoc(doc(fireStore, "serviceRequests", request.id), request);
     },
     
     async getRequestById(requestId) {
-        const docRef = doc(db, "serviceRequests", requestId);
+        const docRef = doc(fireStore, "serviceRequests", requestId);
         const snap = await getDoc(docRef);
         return snap.exists() ? (snap.data() as ServiceRequest) : null;
     },
     
     async getRequestsByClient(clientId) {
         const q = query(
-        collection(db, "serviceRequests"),
+        collection(fireStore, "serviceRequests"),
         where("clientId", "==", clientId)
         );
         const snaps = await getDocs(q);
@@ -35,7 +35,7 @@ export const firestoreServiceRequestRepository: IServiceRequestRepository = {
     
     async getAvailableRequests() {
         const q = query(
-        collection(db, "serviceRequests"),
+        collection(fireStore, "serviceRequests"),
         where("status", "==", "pending")
         );
         const snaps = await getDocs(q);
@@ -43,10 +43,10 @@ export const firestoreServiceRequestRepository: IServiceRequestRepository = {
     },
     
     async assignNurse(requestId, nurseId) {
-        await updateDoc(doc(db, "serviceRequests", requestId), { nurseId });
+        await updateDoc(doc(fireStore, "serviceRequests", requestId), { nurseId });
     },
-    
+
     async updateStatus(requestId, status) {
-        await updateDoc(doc(db, "serviceRequests", requestId), { status });
+        await updateDoc(doc(fireStore, "serviceRequests", requestId), { status });
     },
 }

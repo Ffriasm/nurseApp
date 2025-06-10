@@ -6,7 +6,7 @@ interface AppContextProviderProps {
   children: ReactNode;
 }
 
-export const AppContextProvider = ({ children }: AppContextProviderProps) => {
+export const AppContext = ({ children }: AppContextProviderProps) => {
   return (
     <UserRepositoryProvider>
       <ServiceRequestRepositoryProvider>

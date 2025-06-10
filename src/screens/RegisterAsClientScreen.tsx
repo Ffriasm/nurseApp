@@ -10,6 +10,8 @@ import {
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import Icon from "react-native-vector-icons/Feather";
+import { db } from "../data/database";
+import { UserType } from "../data/interfaces/types";
 
 const RegisterAsClientScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -28,7 +30,7 @@ const RegisterAsClientScreen = () => {
   const passwordIsValid = (password: string) =>
     /^(?=.*[A-Z]).{8,}$/.test(password);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!name.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
       Alert.alert("Error", "Todos los campos son obligatorios");
       return;
@@ -52,13 +54,25 @@ const RegisterAsClientScreen = () => {
       return;
     }
 
-    // Aquí se puede agregar validación adicional (email válido, contraseñas seguras, etc.)
+    
 
-    Alert.alert(
-      "Cliente registrado",
-      `Nombre: ${name} ${lastName}\nEmail: ${email}`
-    );
-    // Lógica real: enviar a Firebase o backend con tipo = "cliente"
+    try {
+    const user = {
+      id: "",
+      name: `${name} ${lastName}`,
+      email,
+      type: UserType.Client,
+      createdAt: new Date(),
+    };
+
+    await db.userRepo.createUser(user, password);
+
+    Alert.alert("Registro exitoso", "Bienvenido a la app");
+  } catch (error: any) {
+    console.error(error);
+    Alert.alert("Error", error.message || "No se pudo registrar");
+  }
+    
   };
 
   const passwordsMatch =

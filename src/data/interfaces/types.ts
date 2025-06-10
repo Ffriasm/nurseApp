@@ -1,18 +1,31 @@
 // Tipos generales
-export type UserType = 'client' | 'nurse';
-export type Profession = 'enfermer@' | 'tens';
-export type ServiceType = 'curacion' | 'inyeccion' | 'control_signos' | 'vacunacion';
-export type RequestStatus = 'pending' | 'accepted' | 'completed' | 'cancelled';
+export enum UserType {
+  Client = 'client',
+  Nurse = 'nurse',
+}
+export enum Profession {
+  Enfermera = 'enfermer@',
+  Tens = 'tens',
+}
+export enum ServiceType {
+  Curacion = 'curacion',
+  Inyeccion = 'inyeccion',
+  ControlSignos = 'control_signos',
+  Vacunacion = 'vacunacion',
+}
+export enum RequestStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Completed = 'completed',
+  Cancelled = 'cancelled',
+}
 
 // base profile
 export interface BaseUser {
   id: string; // Firestore ID
   type: UserType;
-  password: string; 
   name: string;
   email: string;
-  phone: string;
-  address: string;
   createdAt: Date;
 }
 
