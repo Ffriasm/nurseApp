@@ -11,9 +11,11 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { User } from "../interfaces/types";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../../firebaseConfig";
-
 
 export const firestoreUserRepository: IUserRepository = {
   async createUser(user: User, password: string) {
@@ -26,6 +28,42 @@ export const firestoreUserRepository: IUserRepository = {
     user.createdAt = new Date();
     await setDoc(doc(fireStore, "users", user.id), user);
   },
+  async loginWithEmailAndPassword(email: string, password: string) {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    const userData = await getDoc(doc(fireStore, "users", user.uid));
+    return userData.exists() ? (userData.data() as User) : null;
+  },
+  async logout() {
+    await auth.signOut();
+  },
+  onAuthStateChanged(callback: (user: User | null) => void) {
+  const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+    if (firebaseUser) {
+      
+      getDoc(doc(fireStore, "users", firebaseUser.uid))
+        .then((userData) => {
+          if (userData.exists()) {
+            callback(userData.data() as User);
+          } else {
+            callback(null);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          callback(null);
+        });
+    } else {
+      callback(null);
+    }
+  });
+
+  return unsubscribe;
+},
 
   async getUserById(userId: string) {
     const docRef = doc(fireStore, "users", userId);

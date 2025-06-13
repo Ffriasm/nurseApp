@@ -10,16 +10,21 @@ import {
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import Logo from '../components/logo/Logo';
+import { useUserRepo } from '../data/contexts/UserRepositoryContext';
 
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const userRepo = useUserRepo();
 
   const handleLogin = () => {
-    Alert.alert('Login', `Email: ${email}\nContraseña: ${password}`);
-    // Aquí irá la lógica real de login
+    userRepo.loginWithEmailAndPassword(email, password)
+      
+      .catch((error) => {
+        Alert.alert('Login failed', error.message);
+      });
   };
 
   return (
