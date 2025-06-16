@@ -44,13 +44,21 @@ export interface User extends BaseUser {
 }
 
 // request for service
-export interface ServiceRequest {
-  id: string; // Firestore ID
+export interface ServiceRequest  {
+  id: string;
+  title: string;
+  description: string;
+  type: "direct" | "open";
+  priority: "urgent" | "planned";
+  serviceType: "curaciones" | "inyección" | "control signos" | "otros";
+  price: number; 
+  createdAt: Date;
+  scheduledAt?: Date;
   clientId: string;
-  nurseId?: string;
-  serviceType: ServiceType;
-  status: RequestStatus;
-  scheduledAt: Date;
-  location: string;
-  notes?: string;
-}
+  targetNurseId?: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  distanceFromNurse?: number; 
+};
